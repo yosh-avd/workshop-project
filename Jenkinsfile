@@ -32,9 +32,7 @@ environment {
        sh "${scannerHome}/bin/sonar-scanner" // This is going to communicate with our sonar cube server and send the analysis report.
         }
       }   
- 
-     }
-    
+    }
       stage("Quality Gate") {
         steps {
             script {
@@ -44,6 +42,7 @@ environment {
                     error " Pipeline aborted due to quality gate failure: ${qg.status}"
                 }
             }
-        }
+         }
+       }
      }
- }
+  }
