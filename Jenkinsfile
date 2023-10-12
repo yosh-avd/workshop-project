@@ -32,6 +32,18 @@ environment {
        sh "${scannerHome}/bin/sonar-scanner" // This is going to communicate with our sonar cube server and send the analysis report.
         }
       }   
-    }
-   }
+ 
+     }
+    
+      stage("Quality Gate") {
+        steps {
+            script {
+            timeout(time: 1, unit: 'HOURS') {
+                def qg = waitForQualityGate()
+                if (qg.status != 'OK') {
+                    error " Pipeline aborted due to quality gate failure: ${qg.status}"
+                }
+            }
+        }
+     }
  }
