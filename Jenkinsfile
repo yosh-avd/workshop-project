@@ -1,4 +1,6 @@
 def registry = 'https://yoshavd123.jfrog.io'
+def imageName = 'yoshavd123.jfrog.io/yosh-docker-local/yoshtrend'
+def version   = '2.1.3'
 
 pipeline {
     agent {label 'maven'}
@@ -72,6 +74,28 @@ environment {
             }
         }   
      }   
- 
-  }
+
+   stage(" Docker Build ") {
+        steps {
+            script {
+               echo '<--------------- Docker Build Started --------------->'
+               app = docker.build(imageName+":"+version)
+               echo '<--------------- Docker Build Ends --------------->'
+            }
+          }
+        }
+    
+    stage (" Docker Publish "){
+        steps {
+            script {
+                echo '<--------------- Docker Publish Started --------------->'  
+                docker.withRegistry(registry, 'jfrog-credential'){
+                app.push()
+                }    
+                echo '<--------------- Docker Publish Ended --------------->'  
+                }
+            }
+        }
+    
+    }
 }
